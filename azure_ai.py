@@ -1,5 +1,5 @@
 import os
-from openai import OpenAI
+from openai import AzureOpenAI
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -13,12 +13,18 @@ AZURE_DEPLOYMENT_NAME = os.getenv('AZURE_DEPLOYMENT_NAME')  # Add this to your .
 # openai.api_key = AZURE_API_KEY
 # openai.api_base = AZURE_ENDPOINT
 # openai.api_version = "2023-03-15-preview"  # Update this if your Azure OpenAI version differs
-client = OpenAI(
+client = AzureOpenAI(
     # This is the default and can be omitted
+    azure_endpoint=AZURE_ENDPOINT,
+    azure_deployment=AZURE_DEPLOYMENT_NAME,
+    # api_version="2023-03-15-preview",
+    
+    api_version="2025-04-14",
     api_key=AZURE_API_KEY,
-    api_base=AZURE_ENDPOINT,  # Corresponds to your Azure OpenAI endpoint
-    api_type="azure",         # Specifies that this is an Azure OpenAI instance
-    api_version="2023-03-15-preview"  # Update this if your Azure OpenAI version differs
+    
+    # api_base=AZURE_ENDPOINT,  # Corresponds to your Azure OpenAI endpoint
+    # api_type="azure",         # Specifies that this is an Azure OpenAI instance
+    # api_version="2023-03-15-preview"  # Update this if your Azure OpenAI version differs
 
 )
 
@@ -32,6 +38,7 @@ def get_azure_ai_response(prompt: str) -> str:
             instructions="You are a discord assistant that talks to users and is helpful and gives honest feedback and advice.",
             input=prompt,  # Use the prompt provided by the user
         )
+        print("we are here")
         # response = openai.ChatCompletion.create(
         #     engine=AZURE_DEPLOYMENT_NAME,  # The deployment name you set in Azure
         #     messages=[

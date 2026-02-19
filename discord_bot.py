@@ -22,17 +22,28 @@ async def on_ready():
 # Event listener for when a message is sent
 @client.event
 async def on_message(message):
+    print("Message")
+    
     # Prevent the bot from responding to its own messages
     if message.author == client.user:
+        print(f"{message.author} == {client.user}")
         return
-
-    if client.user.mentioned_in(message):
+    print(f"Client.user == {client.user}")
+    print(f"Message. author= {message.author}")
+    
+    bot_name = f"@{client.user.name}"
+    # print(bot_name)
+    lowered_content = message.clean_content.lower()
+    print(lowered_content)
+    if client.user.name in lowered_content:
+        print("Client mentioned")
         if not message.mention_everyone:
-            user_message = message.content.replace(f'<@{client.user.id}>', '').strip()
-            print(f"User message: {user_message}")
+            # user_message = message.content.replace(f'<@{client.user.id}>', '').strip()
+            lowered_content = lowered_content.replace(f"@{client.user.name}", "")
+            print(f"User message: {lowered_content}")
 
             # Get response from Azure OpenAI
-            response = get_azure_ai_response(user_message)
+            response = get_azure_ai_response(lowered_content)
             await message.channel.send(response)
 
 # Run the bot with your token
