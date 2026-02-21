@@ -44,6 +44,12 @@ async def on_message(message):
 
             # Get response from Azure OpenAI
             response = get_azure_ai_response(lowered_content)
+            # if isinstance(response, Exception):
+            #     print("An error occurred. Restarting the bot...")
+            #     python = os.path.abspath(__file__)  # Get the current script's path
+            #     os.execv(python, ["CTRL"] + ["C"])
+            #     os.execv(python, ['python'] + [python])  # Restart the script
+            # else:
             await message.channel.send(response)
 
 # Run the bot with your token
