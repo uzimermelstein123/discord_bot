@@ -40,11 +40,12 @@ async def on_message(message):
         if not message.mention_everyone:
             # user_message = message.content.replace(f'<@{client.user.id}>', '').strip()
             lowered_content = lowered_content.replace(f"@{client.user.name}", "")
-            print(f"User message: {lowered_content}")
+            
+            print(f"User prompt: {lowered_content}") # This is where I will process prompt for CANVAS
 
             # Get response from Azure OpenAI
             response = get_azure_ai_response(lowered_content)
-            # if isinstance(response, Exception):
+            # if isinstance(response, Exception): #interesting thought here to rerun code, for later
             #     print("An error occurred. Restarting the bot...")
             #     python = os.path.abspath(__file__)  # Get the current script's path
             #     os.execv(python, ["CTRL"] + ["C"])
