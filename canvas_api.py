@@ -39,13 +39,14 @@ def get_courses():
     if courses:
         print("Courses retrieved successfully.")
         # Example: Print course attributes
-        for course in courses:
-            course_id = course.get('id')
-            course_name = course.get('name', 'Name Hidden (Restricted)')
-            # print(course)
-            print(course_id, " | " ,course_name)
-            get_course_attributes(course_id)
-            break
+        # for course in courses:
+        course_id = courses[1].get('id')
+        course_name = courses[1].get('name', 'Name Hidden (Restricted)')
+        # print(course)
+        print(course_id, " | " ,course_name)
+        get_course_attributes(course_id)
+            # break
+            # break
             # print(f"Course ID: {course['id']}, Name: {course['name']}")
     else:
         print("Failed to retrieve courses.")
@@ -56,9 +57,26 @@ def get_course_attributes(course_id: int):
     Retrieves attributes for a specific course.
     :param course_id: The ID of the course to retrieve attributes for.
     """
-    print(f"Fetching attributes for course ID {course_id}...")
-    course = make_canvas_request(f"/courses/{course_id}/assignments/2593917")
-    print(course)
+
+    print(f"Fetching attributes for course ID {course_id}...\n")
+    course = make_canvas_request(f"/courses/{course_id}") # Can remove /assignments need to see differences, also can add assignment id if necessary
+    assignments = make_canvas_request(f"/courses/{course_id}/assignments") # Can remove /assignments need to see differences, also can add assignment id if necessary
+    
+    for i, assignment in enumerate(assignments):
+        print(f"Assignment {i} in assignments{assignment}\n")
+        if 'attachments in assignment':
+            print(f"There are attachments {assignment["attachements"]}\n")
+        
+    return
+        # assignment_details = make_canvas_request(f"/courses/{course_id}/assignments/{assignment}")
+    # print("Course is ", course)
+    
+    
+    # print("Course ID {}")
+    print("Assignments are \n", assignments[0])
+    print(f"Assignment (ID 2593917 )details \n {assignment_details}")
+    print("Assignments and details are equal", assignments[0] == assignment_details)
+    print("---------------------\n")
     # if course:
     #     print("Course attributes retrieved successfully.")
     #     # Example: Print course attributes
@@ -77,5 +95,5 @@ if __name__ == "__main__":
     get_courses()
 
     # Fetch attributes for a specific course (replace with a valid course ID)
-    course_id = 191199  # Replace with an actual course ID
-    get_course_attributes(course_id)
+    # course_id = 191199  # Replace with an actual course ID
+    # get_course_attributes(course_id)
