@@ -15,8 +15,9 @@ def make_canvas_request(endpoint: str, params: dict = None):
     :return: The JSON response from the API.
     """
     try:
+        print(f"Endpoint {CANVAS_API_URL}{endpoint}")
         response = requests.get(
-            f"{CANVAS_API_URL}{endpoint}?enrollment_state=active", #enrollment state=active is great from gemini
+            f"{CANVAS_API_URL}{endpoint}", #?enrollment_state=active", #enrollment state=active is great from gemini
             headers={
                 "Authorization": f"Bearer {CANVAS_API_KEY}",  # Use Bearer token for authentication
                 "Accept": "application/json",
@@ -35,7 +36,7 @@ def get_courses():
     Retrieves a list of courses for the authenticated user.
     """
     print("Fetching courses...")
-    courses = make_canvas_request("/courses")
+    courses = make_canvas_request("/api/v1/courses")
     if courses:
         print("Courses retrieved successfully.")
         # Example: Print course attributes
@@ -59,14 +60,18 @@ def get_course_attributes(course_id: int):
     """
 
     print(f"Fetching attributes for course ID {course_id}...\n")
-    course = make_canvas_request(f"/courses/{course_id}") # Can remove /assignments need to see differences, also can add assignment id if necessary
-    assignments = make_canvas_request(f"/courses/{course_id}/assignments") # Can remove /assignments need to see differences, also can add assignment id if necessary
-    
+    # course = make_canvas_request(f"/api/v1/courses/{course_id}") # Can remove /assignments need to see differences, also can add assignment id if necessary
+    assignments = make_canvas_request(f"/api/v1/courses/{course_id}/assignments") # Can remove /assignments need to see differences, also can add assignment id if necessary
+    # print(course.get_assignment("2593536"))
     for i, assignment in enumerate(assignments):
         print(f"Assignment {i} in assignments{assignment}\n")
-        if 'attachments in assignment':
-            print(f"There are attachments {assignment["attachements"]}\n")
-        
+        # if 'attachments' in assignment:
+        #     print(f"There are attachments {assignment['attachments']}\n")
+        files = make_canvas_request(f"/files/44762298")
+        print(files)
+        break
+        # print(f"Files: {file}")
+                                            
     return
         # assignment_details = make_canvas_request(f"/courses/{course_id}/assignments/{assignment}")
     # print("Course is ", course)
