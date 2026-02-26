@@ -1,6 +1,8 @@
 import requests
 from dotenv import load_dotenv
 import os
+from parse_description import parse_assignment_description
+
 
 load_dotenv()
 CANVAS_API_KEY = os.getenv("CANVAS_API_KEY")
@@ -62,14 +64,18 @@ def get_course_attributes(course_id: int):
     print(f"Fetching attributes for course ID {course_id}...\n")
     # course = make_canvas_request(f"/api/v1/courses/{course_id}") # Can remove /assignments need to see differences, also can add assignment id if necessary
     assignments = make_canvas_request(f"/api/v1/courses/{course_id}/assignments") # Can remove /assignments need to see differences, also can add assignment id if necessary
-    # print(course.get_assignment("2593536"))
+
     for i, assignment in enumerate(assignments):
         print(f"Assignment {i} in assignments{assignment}\n")
+        
+        parse_assignment_description(assignment)
+        # if 'data-api-endpoint' in assignment:
+        #     print(f"Assignment {i} has {len(assignment['data-api-endpoint'])} files")
         # if 'attachments' in assignment:
         #     print(f"There are attachments {assignment['attachments']}\n")
-        files = make_canvas_request(f"/files/44762298")
-        print(files)
-        break
+        # files = make_canvas_request(f"/files/44762298")
+        # print(files)
+        # break
         # print(f"Files: {file}")
                                             
     return
