@@ -1,7 +1,9 @@
 import requests
 from dotenv import load_dotenv
 import os
-from parse_description import parse_assignment_description
+from bs4 import BeautifulSoup
+
+# from parse_description import parse_assignment_description_for_fileid
 
 
 load_dotenv()
@@ -31,6 +33,8 @@ def make_canvas_request(endpoint: str, params: dict = None):
     except requests.exceptions.RequestException as e:
         print(f"Error making request to Canvas API: {e}")
         return None
+    
+
 
 # Get all courses
 def get_courses():
@@ -38,11 +42,18 @@ def get_courses():
     Retrieves a list of courses for the authenticated user.
     """
     print("Fetching courses...")
-    courses = make_canvas_request("/api/v1/courses")
+    # courses = make_canvas_request("/api/v1/courses")
+    params = {"enrollment_state": "active"}  # Add this to filter for active courses
+    courses = make_canvas_request("/api/v1/courses", params=params)
+    
     if courses:
         print("Courses retrieved successfully.")
         # Example: Print course attributes
         # for course in courses:
+        # print(courses)
+        # for course in courses:
+        #     course_name = course_name = course.get('name', 'Name Hidden (Restricted)')
+        #     print(course_name)
         course_id = courses[1].get('id')
         course_name = courses[1].get('name', 'Name Hidden (Restricted)')
         # print(course)
@@ -64,42 +75,75 @@ def get_course_attributes(course_id: int):
     print(f"Fetching attributes for course ID {course_id}...\n")
     # course = make_canvas_request(f"/api/v1/courses/{course_id}") # Can remove /assignments need to see differences, also can add assignment id if necessary
     assignments = make_canvas_request(f"/api/v1/courses/{course_id}/assignments") # Can remove /assignments need to see differences, also can add assignment id if necessary
-
+    print(assignments)
     for i, assignment in enumerate(assignments):
         print(f"Assignment {i} in assignments{assignment}\n")
         
-        parse_assignment_description(assignment)
-        # if 'data-api-endpoint' in assignment:
-        #     print(f"Assignment {i} has {len(assignment['data-api-endpoint'])} files")
-        # if 'attachments' in assignment:
-        #     print(f"There are attachments {assignment['attachments']}\n")
-        # files = make_canvas_request(f"/files/44762298")
-        # print(files)
-        # break
-        # print(f"Files: {file}")
-                                            
-    return
-        # assignment_details = make_canvas_request(f"/courses/{course_id}/assignments/{assignment}")
-    # print("Course is ", course)
-    
-    
-    # print("Course ID {}")
-    print("Assignments are \n", assignments[0])
-    print(f"Assignment (ID 2593917 )details \n {assignment_details}")
-    print("Assignments and details are equal", assignments[0] == assignment_details)
-    print("---------------------\n")
-    # if course:
-    #     print("Course attributes retrieved successfully.")
-    #     # Example: Print course attributes
-    #     print(course)
+        parse_assignment_description_for_fileid(assignment)
         
-    #     # print(f"Course Name: {course['name']}")
-    #     # print(f"Course Code: {course['course_code']}")
-    #     # print(f"Start Date: {course['start_at']}")
-    #     # print(f"End Date: {course['end_at']}")
-    # else:
-    #     print(f"Failed to retrieve attributes for course ID {course_id}.")
+    # file_map = parse_assignment_description_for_fileid(assignment)
+
+    # for fid, title in file_map.items():
+    #     print(f"Syncing {title}...")
+    #     local_path = download_to_server(fid)
+
+def parse_assignment_description_for_fileid(assignment):
+    html_data = assignment['description'] 
+    soup = BeautifulSoup(html_data, 'html.parser')
+
+    extracted_files = {}
+    # Find all links that have the data-api-endpoint attribute
+    for link in soup.find_all('a', attrs={'data-api-endpoint': True}):
+        endpoint = link['data-api-endpoint']
+        title = link.get('title', link.get('Title', 'No Title'))
+        
+        print(f"File Title: {title}")
+        # print(f"API Endpoint: {endpoint}")
+        
+        # To get just the ID, split the string
+        file_id = endpoint.split('/')[-1]
+        
+        download_to_server(file_id)
+        print(f"Downlaoded File ID: {file_id}\n")
+        
+        # extracted_files[file_id] = title
+        
+        # download_canvas_file(file_id)
+        
+    # Print extracted_files only once at the end
+    # print(extracted_files)
     
+    return extracted_files
+
+def download_to_server(file_id, output_folder="./ai_context"):
+    # 1. Get the file metadata to find the actual download URL
+    # Canvas often redirects to an AWS S3 bucket
+    file_info = make_canvas_request(f"/files/{file_id}")
+    print(f"File info: {file_info}")
+    
+    if not file_info or 'url' not in file_info["attachment"]:
+        print(f"Error: Could not get download URL for {file_id}")
+        return None
+    file_attachment = file_info['attachment']
+    download_url = file_attachment['url']
+    filename = file_attachment.get('display_name', f"temp_{file_id}.pdf")
+    save_path = os.path.join(output_folder, filename)
+
+    # Ensure the directory exists
+    os.makedirs(output_folder, exist_ok=True)
+
+    # 2. Perform the actual download to YOUR end
+    # Use stream=True to handle large files without crashing memory
+    print(f"Routing download for {filename} to local end...")
+    with requests.get(download_url, stream=True) as r:
+        r.raise_for_status()
+        with open(save_path, 'wb') as f:
+            for chunk in r.iter_content(chunk_size=8192):
+                f.write(chunk)
+    
+    print(f"File stored at: {save_path}")
+    return save_path
+
 # Example usage
 if __name__ == "__main__":
     # Fetch all courses
