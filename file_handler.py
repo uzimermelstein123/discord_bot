@@ -12,7 +12,7 @@ def download_to_server(file_id, output_folder="./ai_context"):
     :param output_folder: The folder where the file will be saved
     :return: The path to the downloaded file or None if failed
     """
-    file_info = make_canvas_request(f"/api/v1/files/{file_id}")
+    file_info = make_canvas_request(f"/files/{file_id}")
     
     if not file_info or 'url' not in file_info.get("attachment", {}):
         print(f"Error: Could not get download URL for {file_id}")
