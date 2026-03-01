@@ -1,0 +1,79 @@
+Page 1:
+CAP 4630: Introduction to Artificial Intelligence
+Assignment 1: Practical Application of Classical AI Techniques
+This is a LIVE Document.
+The purpose of this assignment is to demonstrate your understanding of Classical AI techniques by applying one or more of them to solve an illustrative problem.You will design a problem scenario and apply one or more
+classical AI approaches discussed in class.
+⚠ This is just Assignment 1, not the Final Project. No need to overwork or overthink.
+⚠ The goal is to test your understanding of the techniques, not the complexity of the final solution.
+CAP4630 - Assignment 1 - {Your_Name }
+CAP4630 - REPO Project Ideas
+What do you need to do?
+1. MAKE A COPY of the ‘Assignment Template’ (link above) and save with {Your_Name}
+2. Define a Problem Scenario (instructions below)
+3. Describe your Solution:
+a. Document your solution in the assignment document
+b. (eventually) Add Link to Google Collab with your experimental code
+4. Complete the assignment template with:
+a. When applicable, Link to the Google Collab.
+Page 2:
+b. Problem Scenario
+c. List of Classical AI techniques being applied
+d. Self-Assessments
+e. Full Instructions about your solution
+5. Export the completed Assignment Document as a PDF and submit it to Canvas
+Rules of Engagement
+● Individual projects.
+● You can bring your own scenario.
+● We are providing a list of ideas and desirable scenarios as suggestions (link above).
+● You will not be graded on the scenario itself, but aim to make it useful and engaging.
+● Free to use any GenAI technology – apply any GenAI tool, architecture, or strategy necessary for the project. DO NOT use GenAI as a copy&paste tool to generate the project for you or excessive use in content
+generation.
+● Free to use any Text Editing technology – apply any Text Editing technology for the Research Paper (Google, Word, other), as long as (1) you keep the same structure as the template; and (2) you are able to
+generate the PDF for submission.
+● Template Compliance: The structure of the Research Paper must follow the sequence of Sections proposed in the Template. Deviations, such as removal of sections, reordering of content, or major alterations of
+layout and formatting, will affect grading.
+● Page Limit: no limit..
+About the ‘Solution’
+● The description must detail how you have applied one or more Classical AI techniques to solve the problem.
+● In case you decide for no-code, you must describe in detail (essay):
+○ how the solution would be created
+○ What are the elements of the model (data, algorithm, etc)
+○ Description of the Classical AI techniques being applied
+○ How the Classical AI technique operates in this solution
+○ How the solution would operate
+● Valid solutions must include one or more of these Classical AI techniques:
+○ Searching
+○ Planning
+Page 3:
+○ Logic Programming
+○ Bayesian Networks
+○ Intelligent Agent
+About the ‘Baseline Expectation’
+In general, we are expecting the following elements from your deliverables.
+Note: some projects in the ‘REPO of Project Ideas’ will include notes for special requirements for the deliverables.
+The Solution Report (PDF) must provide:
+● Problem scenario
+● Link to Google Collab
+● Self-assessment
+● Copy&Paste of Key Code
+Google Colab with:
+● Demonstrate how to implement world representation, states, and actons
+● Outline (and eventually code) one search algorithm, Bayesian network, Logic Program, other.
+● When applicable, consider possible heuristics (e.g., straight-line distance, estimated walking time)
+● Advanced: provide comparison of results with different path cost, world configurations, etc
+Grading Criteria
+Criterion Expectation Weight
+1. Originality and Research The project demonstrates a clear, well-motivated, and original 30%
+Relevance research question that reflects creative thinking and genuine
+curiosity.
+2. Methodological Design and The paper presents a coherent, technically sound, and feasible 20%
+Technical Soundness analytical design that aligns with the research question. The
+construction is methodologically consistent and well-reasoned.
+3. Quality of Communication The clarity, organization, and professionalism of the written report 20%
+and presentation.
+Page 4:
+Criterion Expectation Weight
+4. Analytical Depth and Quality The project demonstrates substantive analytical effort and produces 30%
+of Deliverables high-quality, interpretable outputs that meaningfully address the
+request.

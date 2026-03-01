@@ -1,0 +1,43 @@
+
+CAP 4630: Introduction to Artificial Intelligence
+Assignment 1: Practical Application of Classical AI Techniques
+
+FILE -> MAKE A COPY (SO YOU CAN SAVE YOUR VERSION).. SUBMIT IN CANVAS  AS PDF!
+
+By: {Your Name} (your_email@fau.edu)
+
+{TITLE}
+{description}
+Google Colab: http://xxx/yyy (when applicable; make sure the link can be accessed, share properly!)
+
+Problem Scenario
+{Describe your problem scenario here}
+{if you are using a problem from ‘REPO List of Ideas’, just copy the Title, Description and selected Level of Complexity} 
+
+Classical AI Techniques being Applied
+I have applied the following Classical AI techniques for the definition (and eventual implementation) of this exercise.
+{List all Classical AI techniques being applied}
+{List all Classical AI techniques being applied}
+
+Self-Assessment - Quality
+I have experimented with my AI Agent and my self-assessment about the Quality of Results:
+Exceptional
+Very Good
+Good
+Reasonable
+
+Solution
+I have created a {describe what you have created}.
+The solution operates as follows:
+{provide a few bullet points}
+{Describe how the solution operates; representation of state, goals, actions, actions, deliberation, etc}
+{How it applies AI to solve the problem}
+
+Results
+{Place examples of experiments and results from executing your code}
+{This can be screenshots}
+
+Source Code
+{only required if you produced code to prove your point}
+{place the KEY CODE that enable your solution here EVEN{If you have coded in Google Colab or other; this is to simplify the grading process}
+

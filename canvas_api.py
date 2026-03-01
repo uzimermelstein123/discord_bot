@@ -2,7 +2,10 @@ import requests
 from dotenv import load_dotenv
 import os
 from bs4 import BeautifulSoup
-
+import pdfplumber
+import mimetypes
+from docx import Document
+import json
 # from parse_description import parse_assignment_description_for_fileid
 
 
@@ -45,7 +48,9 @@ def get_courses():
     # courses = make_canvas_request("/api/v1/courses")
     params = {"enrollment_state": "active"}  # Add this to filter for active courses
     courses = make_canvas_request("/api/v1/courses", params=params)
-    
+    # print(courses)
+    pretty_json_output = json.dumps(courses, indent=4)
+    print(pretty_json_output)
     if courses:
         print("Courses retrieved successfully.")
         # Example: Print course attributes
@@ -54,8 +59,8 @@ def get_courses():
         # for course in courses:
         #     course_name = course_name = course.get('name', 'Name Hidden (Restricted)')
         #     print(course_name)
-        course_id = courses[1].get('id')
-        course_name = courses[1].get('name', 'Name Hidden (Restricted)')
+        course_id = courses[6].get('id')
+        course_name = courses[6].get('name', 'Name Hidden (Restricted)')
         # print(course)
         print(course_id, " | " ,course_name)
         get_course_attributes(course_id)
@@ -88,32 +93,47 @@ def get_course_attributes(course_id: int):
     #     local_path = download_to_server(fid)
 
 def parse_assignment_description_for_fileid(assignment):
-    html_data = assignment['description'] 
-    soup = BeautifulSoup(html_data, 'html.parser')
-
-    extracted_files = {}
-    # Find all links that have the data-api-endpoint attribute
-    for link in soup.find_all('a', attrs={'data-api-endpoint': True}):
-        endpoint = link['data-api-endpoint']
-        title = link.get('title', link.get('Title', 'No Title'))
-        
-        print(f"File Title: {title}")
-        # print(f"API Endpoint: {endpoint}")
-        
-        # To get just the ID, split the string
-        file_id = endpoint.split('/')[-1]
-        
-        download_to_server(file_id)
-        print(f"Downlaoded File ID: {file_id}\n")
-        
-        # extracted_files[file_id] = title
-        
-        # download_canvas_file(file_id)
-        
-    # Print extracted_files only once at the end
-    # print(extracted_files)
+    """
+    Parses assignment description to extract file IDs and downloads files.
+    If no files with data-api-endpoint are found, returns the HTML description.
+    :param assignment: The assignment object from Canvas API
+    :return: Dictionary of extracted files or HTML data if no files found
+    """
+    html_data = assignment.get('description', '')
     
-    return extracted_files
+    # Handle case where description is None or empty
+    if not html_data:
+        print("No description found in assignment.")
+        return {}
+    
+    soup = BeautifulSoup(html_data, 'html.parser')
+    extracted_files = {}
+    
+    # Find all links that have the data-api-endpoint attribute
+    links_with_endpoint = soup.find_all('a', attrs={'data-api-endpoint': True})
+    
+    # If links with data-api-endpoint exist, download them
+    if links_with_endpoint:
+        for link in links_with_endpoint:
+            endpoint = link['data-api-endpoint']
+            title = link.get('title', link.get('Title', 'No Title'))
+            
+            print(f"File Title: {title}")
+            
+            # Extract file ID from endpoint
+            file_id = endpoint.split('/')[-1]
+            
+            download_to_server(file_id)
+            print(f"Downloaded File ID: {file_id}\n")
+            
+            extracted_files[file_id] = title
+    else:
+        # No files with data-api-endpoint found, return HTML data
+        print("No files with data-api-endpoint found in assignment description.")
+        print(f"Assignment Description (HTML):\n{html_data}\n")
+        extracted_files['html_content'] = html_data
+    
+    return html_data
 
 def download_to_server(file_id, output_folder="./ai_context"):
     # 1. Get the file metadata to find the actual download URL
@@ -142,8 +162,122 @@ def download_to_server(file_id, output_folder="./ai_context"):
                 f.write(chunk)
     
     print(f"File stored at: {save_path}")
+    print(f"File text: \n")
+    check_file(save_path)
     return save_path
 
+# def check_file(file_path, output_folder="./ai_context"):
+#     """
+#     Checks if the file is a valid PDF and extracts text from its pages.
+#     :param file_path: The path to the file to check.
+#     """
+#     # Check if the file has a .pdf extension
+#     if not file_path.lower().endswith('.pdf'):
+#         print(f"Error: The file '{file_path}' is not a PDF.")
+#         return
+
+#     # Check if the file's MIME type is application/pdf
+#     mime_type, _ = mimetypes.guess_type(file_path)
+#     if mime_type != 'application/pdf':
+#         print(f"Error: The file '{file_path}' is not a valid PDF (MIME type: {mime_type}).")
+#         return
+
+#     # Open the file with pdfplumber and iterate through its pages
+#     try:
+#         with pdfplumber.open(file_path) as pdf:
+#             if not pdf.pages:
+#                 print(f"Error: The file '{file_path}' has no pages.")
+#                 return
+
+#             print(f"Extracting text from the file '{file_path}'...")
+#             pages_text = []
+#             for i, page in enumerate(pdf.pages):
+#                 print(f"Page {i + 1}:")
+#                 page_text = page.extract_text()
+#                 print(page_text)   # Extract and print text from the page
+#                 pages_text.append(page_text)
+#                 print("-" * 40)
+                
+#             output_file = os.path.join(output_folder, os.path.basename(file_path).replace('.pdf', '.txt'))
+#             with open(output_file, 'w', encoding='utf-8') as f:
+#                 # for page_text in pages_text:
+#                 f.write("\n".join(pages_text))
+#             print(f"Extracted text saved to: {output_file}")
+#     except Exception as e:
+#         print(f"Error processing the file '{file_path}': {e}")
+
+def check_file(file_path, output_folder="./ai_context"):
+    """
+    Checks if the file is a valid PDF or DOCX and extracts text from its pages/paragraphs.
+    Saves the extracted text to the ai_context folder.
+    :param file_path: The path to the file to check.
+    :param output_folder: The folder where extracted text will be saved.
+    """
+    # Ensure the directory exists
+    os.makedirs(output_folder, exist_ok=True)
+
+    file_extension = file_path.lower().split('.')[-1]
+
+    # Handle PDF files
+    if file_extension == 'pdf':
+        # Check if the file's MIME type is application/pdf
+        mime_type, _ = mimetypes.guess_type(file_path)
+        if mime_type != 'application/pdf':
+            print(f"Error: The file '{file_path}' is not a valid PDF (MIME type: {mime_type}).")
+            return
+
+        # Open the file with pdfplumber and iterate through its pages
+        try:
+            with pdfplumber.open(file_path) as pdf:
+                if not pdf.pages:
+                    print(f"Error: The file '{file_path}' has no pages.")
+                    return
+
+                print(f"Extracting text from PDF '{file_path}'...")
+                pages_text = []
+                for i, page in enumerate(pdf.pages):
+                    print(f"Page {i + 1}:")
+                    page_text = page.extract_text()
+                    print(page_text)  # Extract and print text from the page
+                    pages_text.append(f"Page {i + 1}:\n{page_text}")
+                    print("-" * 40)
+
+                # Save extracted text to file
+                output_file = os.path.join(output_folder, os.path.basename(file_path).replace('.pdf', '.txt'))
+                with open(output_file, 'w', encoding='utf-8') as f:
+                    f.write("\n".join(pages_text))
+                print(f"Extracted text saved to: {output_file}\n")
+        except Exception as e:
+            print(f"Error processing PDF file '{file_path}': {e}\n")
+
+    # Handle DOCX files
+    elif file_extension == 'docx':
+        # Check if the file's MIME type is correct for DOCX
+        mime_type, _ = mimetypes.guess_type(file_path)
+        if mime_type != 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+            print(f"Warning: The file '{file_path}' may not be a valid DOCX (MIME type: {mime_type}).")
+
+        # Open the DOCX file and extract text
+        try:
+            doc = Document(file_path)
+            print(f"Extracting text from DOCX '{file_path}'...")
+            extracted_text = ""
+            
+            for i, paragraph in enumerate(doc.paragraphs):
+                print(f"Paragraph {i + 1}: {paragraph.text}")
+                extracted_text += paragraph.text + "\n"
+
+            # Save extracted text to file
+            output_file = os.path.join(output_folder, os.path.basename(file_path).replace('.docx', '.txt'))
+            with open(output_file, 'w', encoding='utf-8') as f:
+                f.write(extracted_text)
+            print(f"Extracted text saved to: {output_file}\n")
+        except Exception as e:
+            print(f"Error processing DOCX file '{file_path}': {e}\n")
+
+    # Unsupported file type
+    else:
+        print(f"Error: The file '{file_path}' is not a supported file type (PDF or DOCX).\n")
 # Example usage
 if __name__ == "__main__":
     # Fetch all courses
