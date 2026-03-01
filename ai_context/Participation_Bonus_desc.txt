@@ -1,0 +1,5 @@
+<link rel="stylesheet" href="https://instructure-uploads.s3.amazonaws.com/account_79550000000000001/attachments/14476783/11-14-2018.css"><p><strong>Participation Bonus - 20%</strong></p>
+<ul>
+<li>Bonus assigned at the beginning of the course to benefit students with great participation, attendance, regular exercises.</li>
+<li>Bonus at discretion of the instructor.</li>
+</ul>

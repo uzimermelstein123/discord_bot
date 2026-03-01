@@ -1,0 +1,6 @@
+<link rel="stylesheet" href="https://instructure-uploads.s3.amazonaws.com/account_79550000000000001/attachments/14476783/11-14-2018.css"><p>All: &nbsp;My apologies, but please resubmit your response for week 3 discussion. &nbsp; I made a mistake when I set it up and we can't grade your original submission. &nbsp;</p>
+<p>&nbsp;</p>
+<p>Please read the following article.</p>
+<p><a href="https://www.reuters.com/investigates/special-report/meta-ai-chatbot-guidelines/">https://www.reuters.com/investigates/special-report/meta-ai-chatbot-guidelines/</a></p>
+<p>Do you feel the US government should regulate AI? &nbsp;Why or why not?&nbsp;</p>
+<p>What sort of controls are (or are not) needed on AI models?&nbsp;</p>

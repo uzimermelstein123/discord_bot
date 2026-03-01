@@ -1,0 +1,57 @@
+<link rel="stylesheet" href="https://instructure-uploads.s3.amazonaws.com/account_79550000000000001/attachments/14476783/11-14-2018.css"><p><strong>Objective:</strong></p>
+<p><span>Hands-on experimentation with Bayesian Network.</span></p>
+<p>&nbsp;</p>
+<p><img src="https://canvas.fau.edu/courses/192059/files/44521075/preview?verifier=OkXZQbfMLMGnevkxOCYUGrjPnUNt2KdvrvWUxZBx" alt="Unknown.png" data-api-endpoint="https://canvas.fau.edu/api/v1/courses/192059/files/44521075" data-api-returntype="File" loading="lazy"></p>
+<p><strong>The Monty Hall Problem</strong></p>
+<ul style="list-style-type: disc;">
+<li>There are 3 doors: behind one is a car, behind two are goats.</li>
+<li>You choose one door.</li>
+<li>The host knows where the car is.</li>
+<li>The host opens a different door, always revealing a goat.</li>
+<li>Now only two doors remain:</li>
+<li>your original choice and</li>
+<li>one other.</li>
+<li>You must decide: Stay or Switch?</li>
+</ul>
+<p>Extra:</p>
+<p>What would be your decision if we had 4 doors, 5 doors, 10 doors?&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong>Task:</strong></p>
+<p><span>Model the Monty Hall Problem using a Bayesian Network.</span></p>
+<ul>
+<li aria-level="1"><span>Define the random variables (CarDoor, PlayerChoice, HostOpens).</span></li>
+<li aria-level="1"><span>Specify the dependency structure between them.</span></li>
+<li aria-level="1"><span>Encode the host’s conditional behavior.</span></li>
+<li aria-level="1"><span>Perform probabilistic inference.</span></li>
+<li aria-level="1"><span>Verify whether switching produces a better winning probability or not..</span></li>
+</ul>
+<p>&nbsp;</p>
+<p><strong>Deliverable</strong></p>
+<p><span>PDF document presenting (1-2 pages)<br></span></p>
+<p><span>Step 1:</span></p>
+<p><span>Start with your answer to (for 3 doors)<br><em><strong>Stay or Switch?</strong></em><br></span></p>
+<p><span>Explain your answer by presenting your representation of this problem scenario as a Bayesian Network. and reasoning process upon this representation.</span></p>
+<p><span>Step 2:</span></p>
+<p><span>Test with 4 doors, 5 doors, 10 doors. Does it make any difference for &nbsp;your decision process?</span></p>
+<p>&nbsp;</p>
+<p><span>Note: Your PDF document should&nbsp; be very simple</span></p>
+<p>&nbsp;</p>
+<p><strong><em>Title: Experiment 4 - Probabilistic Reasoning and the Monty Hall Problem</em></strong></p>
+<p><strong><em>{Your name}</em></strong></p>
+<p><strong><em>For the 3 doors problem:</em></strong></p>
+<ul>
+<li><strong><em>Stay or Switch? -&gt; [My Answer]</em></strong></li>
+</ul>
+<p><strong><em>{The&nbsp; representation of this problem scenario as a Bayesian Network}</em></strong></p>
+<p>&nbsp;</p>
+<p><strong><em>For the 4 doors problem:</em></strong></p>
+<ul>
+<li><strong><em>Stay or Switch? -&gt; [My Answer]</em></strong></li>
+</ul>
+<p><strong><em>{The&nbsp; representation of this problem scenario as a Bayesian Network}</em></strong></p>
+<p>&nbsp;</p>
+<p><strong><em>For the 5 doors problem:</em></strong></p>
+<p><strong><em>(...)</em></strong></p>
+<p>&nbsp;</p>
+<p><strong><em>For the 10 doors problem:</em></strong></p>
+<p><strong><em>(...)</em></strong></p>
