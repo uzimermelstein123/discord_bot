@@ -1,6 +1,0 @@
-<link rel="stylesheet" href="https://instructure-uploads.s3.amazonaws.com/account_79550000000000001/attachments/14476783/11-14-2018.css"><p>Please read the article and answer the following questions:</p>
-<p><a class="external" href="https://www.anthropic.com/research/agentic-misalignment" target="_blank"><span>https://www.anthropic.com/research/agentic-misalignment</span><span class="external_link_icon" role="presentation"><span class="screenreader-only">Links to an external site.</span></span></a></p>
-<p>1. &nbsp;How does this compare with what we saw in 2001? &nbsp;What are some similarities and differences?</p>
-<p>2. &nbsp;Do you believe this is a real risk to organizations? &nbsp;Why or why not?</p>
-<p>3. &nbsp;If an AI tool you used did behave in this manner what would you do?</p>
-<p>&nbsp;</p>
