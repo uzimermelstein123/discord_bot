@@ -1,0 +1,6 @@
+<link rel="stylesheet" href="https://instructure-uploads.s3.amazonaws.com/account_79550000000000001/attachments/14476783/11-14-2018.css"><p>This is Exam 1. It's in the form of a quiz, with <span style="text-decoration: underline;">7 questions </span>(4 of which are multiple-choice).&nbsp;</p>
+<p>Once you start the exam you have <span style="text-decoration: underline;">90 minutes</span> to complete it.&nbsp;</p>
+<p>This is an open notes exam.</p>
+<p>Read all the questions carefully before answering.&nbsp;</p>
+<p>Write out all the necessary steps when appropriate.&nbsp;</p>
+<p><em>If you have technical issues, send Canvas message or email to professor and TA.</em></p>

@@ -20,14 +20,19 @@ def process_courses():
         assignments = get_course_attributes(course_id)
         
         for assignment in assignments:
-            print(f"\nProcessing assignment: {assignment.get('name')}")
+            assignment_name = assignment.get('name', 'Unknown Assignment')
+            print(f"\nProcessing assignment: {assignment_name}")
             
             # Parse assignment description to extract files
             parse_result = parse_assignment_description_for_fileid(assignment)
             
             # Download extracted files
             for file_info in parse_result['files']:
-                file_path = download_to_server(file_info['file_id'])
+                file_path = download_to_server(
+                    file_info['file_id'],
+                    course_id=course_id,
+                    assignment_name=assignment_name
+                )
                 
                 if file_path:
                     extract_text_from_file(file_path)

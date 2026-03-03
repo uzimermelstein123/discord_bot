@@ -64,8 +64,8 @@ def save_html_content(assignment_name, html_content, output_folder="./ai_context
     
     print(f"Saved HTML description to: {file_path}\n")
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     # Example usage with a mock assignment object
     # mock_id = 
-    result = parse_assignment_description_for_fileid(mock_assignment)
-    print(result)
+    # result = parse_assignment_description_for_fileid(mock_assignment)
+    # print(result)

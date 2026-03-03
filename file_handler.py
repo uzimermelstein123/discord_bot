@@ -5,11 +5,13 @@ import pdfplumber
 from docx import Document
 from canvas_api import make_canvas_request
 
-def download_to_server(file_id, output_folder="./ai_context"):
+def download_to_server(file_id, output_folder="./ai_context", course_id=None, assignment_name=None):
     """
     Downloads a file from Canvas API.
     :param file_id: The ID of the file to download
-    :param output_folder: The folder where the file will be saved
+    :param output_folder: The base folder where files will be saved (default: "./ai_context")
+    :param course_id: Optional course ID for organized folder structure
+    :param assignment_name: Optional assignment name for organized folder structure
     :return: The path to the downloaded file or None if failed
     """
     file_info = make_canvas_request(f"/files/{file_id}")
@@ -21,6 +23,10 @@ def download_to_server(file_id, output_folder="./ai_context"):
     file_attachment = file_info['attachment']
     download_url = file_attachment['url']
     filename = file_attachment.get('display_name', f"temp_{file_id}.pdf")
+    
+    if course_id and assignment_name:
+        output_folder = os.path.join(output_folder, str(course_id), assignment_name)
+    
     save_path = os.path.join(output_folder, filename)
 
     os.makedirs(output_folder, exist_ok=True)
@@ -39,13 +45,16 @@ def download_to_server(file_id, output_folder="./ai_context"):
         print(f"Error downloading file: {e}")
         return None
 
-def extract_text_from_file(file_path, output_folder="./ai_context"):
+def extract_text_from_file(file_path, output_folder=None):
     """
     Extracts text from PDF or DOCX files.
     :param file_path: The path to the file
-    :param output_folder: The folder where extracted text will be saved
+    :param output_folder: Optional folder where extracted text will be saved. If None, uses the directory of the input file.
     :return: The path to the extracted text file or None if failed
     """
+    if output_folder is None:
+        output_folder = os.path.dirname(file_path)
+    
     os.makedirs(output_folder, exist_ok=True)
     file_extension = file_path.lower().split('.')[-1]
 
