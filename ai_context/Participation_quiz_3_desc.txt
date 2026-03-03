@@ -1,4 +1,0 @@
-<link rel="stylesheet" href="https://instructure-uploads.s3.amazonaws.com/account_79550000000000001/attachments/14476783/11-14-2018.css"><p>This is the first participation quiz, in the form of a graded survey. There are 4 questions.</p>
-<p>Take your time in answering questions 3 and 4.</p>
-<p>Just fill out all the answers and you will receive the full credit - there are no incorrect answers.</p>
-<p>Once you start the quiz, you have 10 minutes to finish it.</p>

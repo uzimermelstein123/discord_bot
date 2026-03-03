@@ -1,4 +1,0 @@
-<link rel="stylesheet" href="https://instructure-uploads.s3.amazonaws.com/account_79550000000000001/attachments/14476783/11-14-2018.css"><p>This is a homework assignment in the form of a quiz. There is no time limit, but you can submit your work only once.&nbsp;</p>
-<p>Make sure that you don't close your quiz before submitting.&nbsp;</p>
-<p>Quiz has 5 questions, of which one is multiple-choice.</p>
-<p>Read all the questions carefully before answering.</p>
