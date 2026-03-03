@@ -40,7 +40,7 @@ def parse_assignment_description_for_fileid(assignment):
     else:
         # No files found, save HTML content
         print("No files with data-api-endpoint found in assignment description.")
-        save_html_content(assignment_name, html_data)
+        # save_html_content(assignment_name, html_data)
     
     return {
         'files': extracted_files,

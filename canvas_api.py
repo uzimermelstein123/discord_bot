@@ -62,3 +62,8 @@ def get_course_attributes(course_id: int):
         print(f"Failed to retrieve assignments for course {course_id}.")
     
     return assignments or []
+
+if __name__ == "__main__":
+    params = {"enrollment_state": "active"}
+    modules = make_canvas_request("/api/v1/courses/191199/modules")  # Example endpoint for testing
+    print(modules)

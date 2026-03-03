@@ -13,7 +13,9 @@ def process_courses():
         print("No courses to process.")
         return
     
-    for course in courses:
+    for course in courses:  # Filter for Spring 2024 courses
+        if course["enrollment_term_id"] == 1: # If default course skip
+            continue
         course_id = course.get('id')
         course_name = course.get('name', 'Unknown Course')
         print(f"\nProcessing course: {course_id} | {course_name}")
@@ -46,7 +48,7 @@ def process_courses():
                         extract_text_from_file(file_path, output_folder=assignment_folder)
             
             # Handle HTML content if no files found
-            if 'html_content' in parse_result:
+            if 'html_content' in parse_result and parse_result['html_content']:
                 html_file = os.path.join(assignment_folder, 'assignment_description.html')
                 with open(html_file, 'w', encoding='utf-8') as f:
                     f.write(parse_result['html_content'])
