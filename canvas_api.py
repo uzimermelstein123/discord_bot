@@ -63,42 +63,57 @@ def get_course_attributes(course_id: int):
     
     return assignments or []
 
+def get_module_html_urls(course_id: int, course_name: str = ""):
+    """
+    Retrieves all html_urls for items across all modules in a course.
+    :param course_id: The ID of the course.
+    :param course_name: Optional course name for display purposes.
+    :return: List of dicts with module/item info and html_urls.
+    """
+    modules = make_canvas_request(f"/api/v1/courses/{course_id}/modules")
+
+    if not modules:
+        print(f"No modules found for course: {course_name or course_id}")
+        return []
+
+    results = []
+    print(f"\nCourse: {course_name or course_id}")
+    print("=" * 50)
+
+    for module in modules:
+        print(f"\n  Module: {module['name']} (ID: {module['id']})")
+        print(f"  {'-' * 40}")
+
+        if not module.get("items_url"):
+            print("    No items URL for this module.")
+            continue
+
+        items_url = module["items_url"].replace(CANVAS_API_URL, "")
+        items = make_canvas_request(items_url)
+
+        if not items:
+            print("    No items found.")
+            continue
+
+        for item in items:
+            html_url = item.get("html_url")
+            title = item.get("title", "Untitled")
+            item_type = item.get("type", "Unknown")
+            print(f"    [{item_type}] {title}")
+            print(f"      URL: {html_url}")
+            results.append({"module": module["name"], "title": title, "type": item_type, "html_url": html_url})
+
+    return results
+
+
 if __name__ == "__main__":
     params = {"enrollment_state": "active"}
-    
-    print("Fetching courses...")
     courses = make_canvas_request("/api/v1/courses", params=params)
-    
+
     for course in courses:
-        if course["enrollment_term_id"] == 1: # If default course skip
+        if course["enrollment_term_id"] == 1:
             continue
-        modules = make_canvas_request(f"/api/v1/courses/{course['id']}/modules")  # Example endpoint for testing
+        # urls = get_module_html_urls(course["id"], course["name"])
+        # print(urls)
+        get_module_html_urls(course["id"], course["name"])
         
-        if len(modules) == 0:
-            print(f"No modules found for course name  : {course['name']}\n")
-            continue
-            
-        # print(f"Course ID: {course['id']}, Course Name: {course['name']}")
-        
-        print(f"Modules for course {course['id']} - {course['name']}:")
-        for module in modules:
-            print(f"  Module ID: {module['id']}, Module Name: {module['name']}\n")
-            print(f"Module items: {module}\n")
-            print("-----------------------------\n")
-            # For every module I want to get the items_url and make a request to get the items and print them out
-            # From items url I want to the html_url and add a downlaod to it so I can extract course info
-            if module["items_url"]:
-                items_url = module["items_url"]
-                #cut out the base url from the items url
-                items_url = items_url.replace(CANVAS_API_URL, "")
-                items = make_canvas_request(items_url)
-                
-                # print(f"Items for module {module['id']} - {module['name']}:")
-                # print(f"  {json.dumps(items, indent=4)}\n")
-                print(f"HTML URLs for items in module {items["html_url"]}:")
-                
-            else:
-                print(f"  No items found for module {module['id']} - {module['name']}\n")
-        # print(f"Modules: {modules}\n")
-    # modules = make_canvas_request("/api/v1/courses/191199/modules")  # Example endpoint for testing
-    # print(modules)
