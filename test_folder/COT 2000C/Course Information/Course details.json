@@ -1,0 +1,24 @@
+{
+  "url": "course-details",
+  "title": "Course details",
+  "created_at": "2026-01-13T16:01:23Z",
+  "editing_roles": "teachers",
+  "page_id": 3008989,
+  "last_edited_by": {
+    "id": 62459,
+    "anonymous_id": "1c6z",
+    "display_name": "Velibor Adzic",
+    "avatar_image_url": "https://canvas.fau.edu/images/messages/avatar-50.png",
+    "html_url": "https://canvas.fau.edu/courses/192086/users/62459",
+    "pronouns": null
+  },
+  "published": true,
+  "hide_from_students": false,
+  "front_page": false,
+  "html_url": "https://canvas.fau.edu/courses/192086/pages/course-details",
+  "todo_date": null,
+  "publish_at": null,
+  "updated_at": "2026-01-13T16:03:56Z",
+  "locked_for_user": false,
+  "body": "<link rel=\"stylesheet\" href=\"https://instructure-uploads.s3.amazonaws.com/account_79550000000000001/attachments/14476783/11-14-2018.css\"><p><span style=\"text-decoration: underline;\">Note: Most of this information is already posted in Simple Syllabus.</span></p>\n<p><strong>TEAM</strong></p>\n<p>Instructor: <strong>Velibor Adzic</strong></p>\n<p>Email: vadzic<span>@fau.edu (preferred contact by direct message in Canvas)</span></p>\n<p>Office hours: EE 525, Tuesdays 9:30AM \u2013 11:30AM</p>\n<p>Grading TA: <strong>Md Robiul Hassan</strong></p>\n<p>Email: <span>hassanm2023@fau.edu</span></p>\n<p>&nbsp;</p>\n<p><strong>TEXTBOOK</strong></p>\n<p><span><em>Applied Discrete Structures</em><br>Open Access: https://discretemath.org/<br></span></p>\n<p>&nbsp;</p>\n<p><strong>GRADE COMPONENTS</strong></p>\n<p>Homeworks (8) = 40%</p>\n<p>Exam 1 = 20%<br>Exam 2 = 20%</p>\n<p>Participation = 10% (Attendance is <span style=\"text-decoration: underline;\">NOT mandatory</span>, participation graded using online quizzes).</p>\n<p>Labs = 10%<br><br></p>\n<p><strong>LABS</strong></p>\n<p>Lab section is fully managed by your lab's TA.</p>\n<p>Lab TA: <strong>Abit Jurkuch</strong></p>\n<p><span style=\"text-decoration: underline;\">Anything related to the lab</span> needs to be communicated with the TA first.</p>\n<p>&nbsp;</p>\n<p><span style=\"color: #0e68b3;\"><strong>ADDITIONAL TUTORING</strong></span></p>\n<p><span>Center for Learning and Student Success: <a href=\"https://www.fau.edu/class/esuccess/online-academic-support/\" target=\"_blank\">https://www.fau.edu/class/esuccess/online-academic-support/</a></span></p>\n<p>(find tutors for \"COT 2000c\" on the page)</p>"
+}
