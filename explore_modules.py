@@ -10,6 +10,8 @@ import requests
 from dotenv import load_dotenv
 from canvas_api import get_courses, make_canvas_request
 from file_handler import download_to_server, extract_text_from_file
+from urllib.parse import urlparse
+
 
 load_dotenv()
 CANVAS_API_URL = os.getenv("CANVAS_API_URL", "")
@@ -22,7 +24,7 @@ def sanitize(name):
     return re.sub(r'[\\/*?:"<>|]', '_', name).strip()
 
 
-def process_item(item, module_folder):
+def process_item(item, module_folder, course_name=""):
     item_type = item.get("type", "Unknown")
     title = sanitize(item.get("title", "Untitled"))
 
@@ -45,31 +47,56 @@ def process_item(item, module_folder):
         if external_url:
             download_url = external_url
             use_auth = False  # SharePoint / external — no Canvas auth
-        elif html_url:
-            separator = "&" if "?" in html_url else "?"
-            download_url = f"{html_url}{separator}download_frd=1"
-            use_auth = True
+            # Rewrite SharePoint viewer URLs to direct download URLs
+            print(f"      Original ExternalUrl: {download_url}")
+            if "sharepoint.com" in download_url:
+                print("      Downloading from SharePoint...")
+
+                # Extract personal name from the sharing URL path
+                # e.g. /:b:/g/personal/vadzic_fau_edu1/... → vadzic_fau_edu1
+                path_parts = urlparse(download_url).path.split('/')
+                try:
+                    personal_name = path_parts[path_parts.index('personal') + 1]
+                except (ValueError, IndexError):
+                    print("      Could not extract personal name from SharePoint URL, skipping.")
+                    return
+
+                # Build the class code from course name (e.g. "COT 2000C" → "COT2000c")
+                class_code = course_name.replace(" ", "")
+
+                # Build lecture filename from item title (e.g. "Lecture 01" → "Lecture_01")
+                lecture_name = title.replace(" ", "_")
+
+                # Construct direct download URL
+                base_url = urlparse(download_url)
+                base = f"{base_url.scheme}://{base_url.netloc}"
+                download_url = f"{base}/personal/{personal_name}/Documents/public/{class_code}/{lecture_name}.pdf"
+                print(f"      SharePoint download URL: {download_url}")
+            elif html_url:
+                separator = "&" if "?" in html_url else "?"
+                download_url = f"{html_url}{separator}download_frd=1"
+                use_auth = True
+            else:
+                print(f"      No url available for ExternalUrl '{title}', skipping.")
+                return
+
+        if use_auth:
+            headers = {"Authorization": f"Bearer {CANVAS_API_KEY}"}
+        elif "sharepoint.com" in download_url:
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+                "sec-ch-ua": '"Not:A-Brand";v="99", "Google Chrome";v="145", "Chromium";v="145"',
+                "sec-ch-ua-mobile": "?0",
+                "sec-ch-ua-platform": '"macOS"',
+                "Upgrade-Insecure-Requests": "1",
+            }
         else:
-            print(f"      No url available for ExternalUrl '{title}', skipping.")
-            return
-
-        headers = {"Authorization": f"Bearer {CANVAS_API_KEY}"} if use_auth else {}
-
-        # For SharePoint URLs, reuse browser cookies from the local Chrome session
-        cookies = None
-        if not use_auth and "sharepoint.com" in download_url:
-            try:
-                import browser_cookie3
-                cookies = browser_cookie3.chrome(domain_name=".sharepoint.com")
-                print(f"      Using Chrome SharePoint cookies for '{title}'.")
-            except Exception as e:
-                print(f"      Warning: Could not load browser cookies ({e}). Trying without.")
+            headers = {}
 
         try:
             response = requests.get(
                 download_url,
                 headers=headers,
-                cookies=cookies,
                 stream=True,
                 allow_redirects=True,
             )
@@ -160,7 +187,7 @@ def explore_modules():
                 item_type = item.get("type", "Unknown")
                 title = item.get("title", "Untitled")
                 print(f"    [{item_type}] {title}")
-                process_item(item, module_folder)
+                process_item(item, module_folder, course_name)
 
 
 if __name__ == "__main__":
