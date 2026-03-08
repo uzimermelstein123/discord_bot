@@ -15,7 +15,7 @@ def make_canvas_request(endpoint: str, params: dict = None):
     :return: The JSON response from the API.
     """
     try:
-        print(f"Endpoint {CANVAS_API_URL}{endpoint}")
+        print(f"Request for endpoint : {CANVAS_API_URL}{endpoint}")
         response = requests.get(
             f"{CANVAS_API_URL}{endpoint}",
             headers={
@@ -65,5 +65,40 @@ def get_course_attributes(course_id: int):
 
 if __name__ == "__main__":
     params = {"enrollment_state": "active"}
-    modules = make_canvas_request("/api/v1/courses/191199/modules")  # Example endpoint for testing
-    print(modules)
+    
+    print("Fetching courses...")
+    courses = make_canvas_request("/api/v1/courses", params=params)
+    
+    for course in courses:
+        if course["enrollment_term_id"] == 1: # If default course skip
+            continue
+        modules = make_canvas_request(f"/api/v1/courses/{course['id']}/modules")  # Example endpoint for testing
+        
+        if len(modules) == 0:
+            print(f"No modules found for course name  : {course['name']}\n")
+            continue
+            
+        # print(f"Course ID: {course['id']}, Course Name: {course['name']}")
+        
+        print(f"Modules for course {course['id']} - {course['name']}:")
+        for module in modules:
+            print(f"  Module ID: {module['id']}, Module Name: {module['name']}\n")
+            print(f"Module items: {module}\n")
+            print("-----------------------------\n")
+            # For every module I want to get the items_url and make a request to get the items and print them out
+            # From items url I want to the html_url and add a downlaod to it so I can extract course info
+            if module["items_url"]:
+                items_url = module["items_url"]
+                #cut out the base url from the items url
+                items_url = items_url.replace(CANVAS_API_URL, "")
+                items = make_canvas_request(items_url)
+                
+                # print(f"Items for module {module['id']} - {module['name']}:")
+                # print(f"  {json.dumps(items, indent=4)}\n")
+                print(f"HTML URLs for items in module {items["html_url"]}:")
+                
+            else:
+                print(f"  No items found for module {module['id']} - {module['name']}\n")
+        # print(f"Modules: {modules}\n")
+    # modules = make_canvas_request("/api/v1/courses/191199/modules")  # Example endpoint for testing
+    # print(modules)
