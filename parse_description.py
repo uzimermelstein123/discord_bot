@@ -12,9 +12,6 @@ def parse_assignment_description_for_fileid(assignment):
     html_data = assignment.get('description', '')
     assignment_name = assignment.get('name', 'unknown_assignment')
     
-    if assignment_name == "CAP4630 - Experiment 2 - Logic Programming in Prolog":
-        print(f"Assignment Name: {assignment_name}")
-        print(f"HTML Description: {assignment}...")
     if not html_data:
         print("No description found in assignment.")
         return {'files': [], 'html_content': None}
@@ -48,7 +45,7 @@ def parse_assignment_description_for_fileid(assignment):
         'assignment_name': assignment_name
     }
 
-def save_html_content(assignment_name, html_content, output_folder="./ai_context"):
+def save_html_content(assignment_name, html_content, output_folder="./assignments"):
     """
     Saves HTML content to a file.
     :param assignment_name: The name of the assignment

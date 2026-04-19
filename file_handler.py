@@ -5,24 +5,23 @@ import pdfplumber
 from docx import Document
 from canvas_api import make_canvas_request
 
-def download_to_server(file_id, output_folder="./ai_context", course_id=None, assignment_name=None):
+def download_to_server(file_id, output_folder="./assignments", course_id=None, assignment_name=None):
     """
     Downloads a file from Canvas API.
     :param file_id: The ID of the file to download
-    :param output_folder: The base folder where files will be saved (default: "./ai_context")
+    :param output_folder: The base folder where files will be saved (default: "./assignments")
     :param course_id: Optional course ID for organized folder structure
     :param assignment_name: Optional assignment name for organized folder structure
     :return: The path to the downloaded file or None if failed
     """
-    file_info = make_canvas_request(f"/files/{file_id}")
-    
-    if not file_info or 'url' not in file_info.get("attachment", {}):
+    file_info = make_canvas_request(f"/api/v1/files/{file_id}")
+
+    if not file_info or 'url' not in file_info:
         print(f"Error: Could not get download URL for {file_id}")
         return None
-    
-    file_attachment = file_info['attachment']
-    download_url = file_attachment['url']
-    filename = file_attachment.get('display_name', f"temp_{file_id}.pdf")
+
+    download_url = file_info['url']
+    filename = file_info.get('display_name', f"temp_{file_id}.pdf")
     
     if course_id and assignment_name:
         output_folder = os.path.join(output_folder, str(course_id), assignment_name)

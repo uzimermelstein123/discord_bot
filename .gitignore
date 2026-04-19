@@ -1,1 +1,6 @@
-ai_context/
+assignments/
+canvas_modules/
+test_folder/
+__pycache__/
+*.pyc
+.env

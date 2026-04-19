@@ -1,7 +1,8 @@
 import os
 import discord
 from dotenv import load_dotenv
-from azure_ai import get_azure_ai_response  # Import the Azure AI function
+from azure_ai import get_azure_ai_response
+from assignment_time_pipeline import estimate_assignment_time
 
 # Load the bot token from the .env file
 load_dotenv()
@@ -31,26 +32,31 @@ async def on_message(message):
     print(f"Client.user == {client.user}")
     print(f"Message. author= {message.author}")
     
-    bot_name = f"@{client.user.name}"
-    # print(bot_name)
     lowered_content = message.clean_content.lower()
-    print(lowered_content)
-    if client.user.name in lowered_content:
+    if client.user.name.lower() in lowered_content:
         print("Client mentioned")
         if not message.mention_everyone:
-            # user_message = message.content.replace(f'<@{client.user.id}>', '').strip()
-            prompt = lowered_content.replace(f"@{client.user.name}", "")
-            
-            print(f"User prompt: {prompt}") # This is where I will process prompt for CANVAS
+            prompt = message.clean_content.replace(f"@{client.user.name}", "").strip()
 
-            # Get response from Azure OpenAI
-            response = get_azure_ai_response(prompt)
-            # if isinstance(response, Exception): #interesting thought here to rerun code, for later
-            #     print("An error occurred. Restarting the bot...")
-            #     python = os.path.abspath(__file__)  # Get the current script's path
-            #     os.execv(python, ["CTRL"] + ["C"])
-            #     os.execv(python, ['python'] + [python])  # Restart the script
-            # else:
+            print(f"User prompt: {prompt}")
+
+            prompt_lower = prompt.lower()
+            if "how long" in prompt_lower and ("take" in prompt_lower or "will" in prompt_lower):
+                # Strip command words to extract assignment name
+                assignment_query = (
+                    prompt_lower
+                    .replace("how long will", "")
+                    .replace("how long does", "")
+                    .replace("how long", "")
+                    .replace("take", "")
+                    .replace("?", "")
+                    .strip()
+                )
+                print(f"Assignment time query: {assignment_query}")
+                response = estimate_assignment_time(assignment_query)
+            else:
+                response = get_azure_ai_response(prompt)
+
             await message.channel.send(response)
 
 # Run the bot with your token

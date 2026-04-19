@@ -1,7 +1,7 @@
 """
-Test download script for Canvas modules.
+Canvas modules download script.
 Extracts URLs by item type and saves content organized by:
-  test_folder/{course_name}/{module_name}/{item}
+  canvas_modules/{course_name}/{module_name}/{item}
 """
 import os
 import json
@@ -16,7 +16,7 @@ from urllib.parse import urlparse
 load_dotenv()
 CANVAS_API_URL = os.getenv("CANVAS_API_URL", "")
 CANVAS_API_KEY = os.getenv("CANVAS_API_KEY", "")
-TEST_FOLDER = "./test_folder"
+MODULES_FOLDER = "./canvas_modules"
 
 
 def sanitize(name):
@@ -43,6 +43,7 @@ def process_item(item, module_folder, course_name=""):
     elif item_type == "ExternalUrl":
         external_url = item.get("external_url", "")
         html_url = item.get("html_url", "")
+        use_auth = False
 
         if external_url:
             download_url = external_url
@@ -143,30 +144,29 @@ def process_item(item, module_folder, course_name=""):
 
 
 def explore_modules():
-    # courses = get_courses()
-    # if not courses:
-    #     print("No courses found.")
-    #     return
+    courses = get_courses()
+    if not courses:
+        print("No courses found.")
+        return
 
-    # for course in courses:
-    #     if course.get("enrollment_term_id") == 1:
-    #         continue
+    for course in courses:
+        if course.get("enrollment_term_id") == 1:
+            continue
 
-    #     course_id = course["id"]
-    #     course_name = sanitize(course.get("name", "Unknown"))
-    #     print(f"\n{'='*60}")
-    #     print(f"COURSE: {course_name} (ID: {course_id})")
-    #     print(f"{'='*60}")
-        course_name = "COT 2000C"
-        course_id = 192086 # Testing this course
+        course_id = course["id"]
+        course_name = sanitize(course.get("name", "Unknown"))
+        print(f"\n{'='*60}")
+        print(f"COURSE: {course_name} (ID: {course_id})")
+        print(f"{'='*60}")
+
         modules = make_canvas_request(f"/api/v1/courses/{course_id}/modules")
         if not modules:
             print("  No modules found.")
-            # continue
+            continue
 
         for module in modules:
             module_name = sanitize(module.get("name", "Unknown"))
-            module_folder = os.path.join(TEST_FOLDER, course_name, module_name)
+            module_folder = os.path.join(MODULES_FOLDER, course_name, module_name)
             os.makedirs(module_folder, exist_ok=True)
 
             print(f"\n  MODULE: {module_name}")

@@ -21,7 +21,7 @@ def process_courses():
         print(f"\nProcessing course: {course_id} | {course_name}")
         
         # Create course folder using course name
-        course_folder = os.path.join("./ai_context", course_name)
+        course_folder = os.path.join("./assignments", course_name)
         os.makedirs(course_folder, exist_ok=True)
         
         assignments = get_course_attributes(course_id)
