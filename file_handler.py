@@ -1,8 +1,10 @@
 import requests
 import os
+import re
 import mimetypes
 import pdfplumber
 from docx import Document
+from bs4 import BeautifulSoup
 from canvas_api import make_canvas_request
 
 def download_to_server(file_id, output_folder="./assignments", course_id=None, assignment_name=None):
@@ -103,7 +105,7 @@ def _extract_from_docx(file_path, output_folder):
         doc = Document(file_path)
         print(f"Extracting text from DOCX '{file_path}'...")
         extracted_text = ""
-        
+
         for paragraph in doc.paragraphs:
             extracted_text += paragraph.text + "\n"
 
@@ -115,3 +117,27 @@ def _extract_from_docx(file_path, output_folder):
     except Exception as e:
         print(f"Error processing DOCX file '{file_path}': {e}\n")
         return None
+
+
+def extract_text_from_canvas_json(data: dict, item_type: str, output_folder: str, title: str):
+    """
+    Extracts HTML content from a saved Canvas JSON object and writes plain text.
+    Assignment → description field, Page → body field, Discussion → message field.
+    """
+    field_map = {"Assignment": "description", "Page": "body", "Discussion": "message"}
+    field = field_map.get(item_type)
+    if not field:
+        return None
+
+    html = data.get(field, "") or ""
+    if not html.strip():
+        print(f"  [{item_type}] No {field} content to extract.")
+        return None
+
+    text = BeautifulSoup(html, "html.parser").get_text(separator="\n").strip()
+    safe_title = re.sub(r'[\\/*?:"<>|]', '_', title)
+    out_file = os.path.join(output_folder, f"{safe_title}.txt")
+    with open(out_file, "w", encoding="utf-8") as f:
+        f.write(text)
+    print(f"  Extracted text → {out_file}")
+    return out_file

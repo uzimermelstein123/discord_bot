@@ -9,7 +9,7 @@ import re
 import requests
 from dotenv import load_dotenv
 from canvas_api import get_courses, make_canvas_request
-from file_handler import download_to_server, extract_text_from_file
+from file_handler import download_to_server, extract_text_from_file, extract_text_from_canvas_json
 from urllib.parse import urlparse
 
 
@@ -137,8 +137,7 @@ def process_item(item, module_folder, course_name=""):
             with open(out_file, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2)
             print(f"      Saved {item_type} → {out_file}")
-            if item_type == "Assignment":
-                print(f"      NOTE: Assignment may have new_window behavior to investigate later.")
+            extract_text_from_canvas_json(data, item_type, module_folder, title)
     else:
         print(f"      [{item_type}] Unhandled type — skipping.")
 
