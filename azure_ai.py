@@ -39,6 +39,7 @@ def get_assignment_time_estimate(assignment_name: str, course_name: str, context
                 {"role": "user", "content": user_prompt},
             ],
         )
+        print(response.choices[0].message.content)
         return response.choices[0].message.content
     except Exception as e:
         print(f"Error communicating with Azure OpenAI: {e}")
